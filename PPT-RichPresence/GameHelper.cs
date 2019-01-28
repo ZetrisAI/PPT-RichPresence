@@ -102,17 +102,23 @@ namespace PPT_RichPresence {
         ));
 
         public static int GetMajorFromFlag() {
-            int flags = Program.PPT.ReadByte(new IntPtr(
-                0x140451C50
-            )) & 0b11111110;
+            int online = Program.PPT.ReadByte(new IntPtr(
+                0x14059894C
+            )) & 0b00000001;
 
-            switch (flags) {
-                case 2: return 1;
-                case 18: return 2;
-                case 24: return 4;
+            if (online > 0) {
+                return 4;
             }
 
-            return 0;
+            int flags = Program.PPT.ReadByte(new IntPtr(
+                0x140451C50
+            )) & 0b00010000;
+
+            if (flags > 0) {
+                return 2;
+            }
+
+            return 1;
         }
 
         public static bool IsInitial() => (
