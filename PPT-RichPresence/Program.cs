@@ -20,8 +20,8 @@ namespace PPT_RichPresence {
             int? menuId = GameHelper.GetMenu();
             if (menuId.HasValue) {
                 return new RichPresence() {
-                    Details = "In Menu",
-                    State = GameHelper.MenuToString(menuId.Value),
+                    Details = GameHelper.MenuToStringTop(menuId.Value),
+                    State = GameHelper.MenuToStringBottom(menuId.Value),
                     Assets = new Assets() {
                         LargeImageKey = "menu"
                     }
@@ -46,7 +46,21 @@ namespace PPT_RichPresence {
             
             } else if (GameHelper.IsCharacterSelect()) {
                 return new RichPresence() {
-                    Details = "Character Select",
+                    Details = GameHelper.MajorToString(
+                        GameHelper.GetMajorFromFlag()
+                    ),
+                    State = "Character Select",
+                    Assets = new Assets() {
+                        LargeImageKey = "menu"
+                    }
+                };
+
+            } else if (GameHelper.IsLoading()) {
+                return new RichPresence() {
+                    Details = GameHelper.MajorToString(
+                        GameHelper.GetMajorFromFlag()
+                    ),
+                    State = "Loading",
                     Assets = new Assets() {
                         LargeImageKey = "menu"
                     }
@@ -54,7 +68,6 @@ namespace PPT_RichPresence {
             }
 
             return new RichPresence() {
-                Details = "Unknown",
                 Assets = new Assets() {
                     LargeImageKey = "menu"
                 }
