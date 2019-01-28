@@ -5,7 +5,7 @@ using DiscordRPC;
 
 namespace PPT_RichPresence {
     static class Program {
-        static ProcessMemory PPT = new ProcessMemory("puyopuyotetris");
+        public static ProcessMemory PPT = new ProcessMemory("puyopuyotetris");
         static DiscordRpcClient Presence;
 
         static System.Windows.Forms.NotifyIcon tray = new System.Windows.Forms.NotifyIcon {
@@ -18,20 +18,20 @@ namespace PPT_RichPresence {
 
         static void Loop(object e) {
             Presence.Invoke();
-
-            Presence.SetPresence(new RichPresence() {
-                Details = "In Match",
-                State = "Puzzle League",
-                Assets = new Assets() {
-                    LargeImageKey = "tetris",
-                    LargeImageText = "Versus (Tetris)",
-                }
-            });
-
+            
             if (PPT.CheckProcess()) {
                 PPT.TrustProcess = true;
-                
-                // Game reads, update presence
+
+                int? menuId = GameHelper.GetMenu();
+                if (menuId.HasValue) {
+                    Presence.SetPresence(new RichPresence() {
+                        Details = "In Menu",
+                        State = GameHelper.MenuToString(menuId.Value),
+                        Assets = new Assets() {
+                            LargeImageKey = "menu"
+                        }
+                    });
+                }
 
                 PPT.TrustProcess = false;
             }
@@ -40,11 +40,7 @@ namespace PPT_RichPresence {
         [STAThread]
         static void Main() {
             Presence = new DiscordRpcClient("539426896841277440");
-
-            Presence.OnReady += (sender, e) => {
-                tray.ShowBalloonTip(2, "Ready", $"User {e.User.Username}", System.Windows.Forms.ToolTipIcon.None);
-            };
-
+            //Presence.OnReady += (sender, e) => {};
             Presence.Initialize();
             ScanTimer.Change(0, 1000);
 
