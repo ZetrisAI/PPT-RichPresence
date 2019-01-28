@@ -93,5 +93,11 @@
   <ItemGroup>
     <Content Include="Resources\TrayIcon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ProcessMemory\ProcessMemory\ProcessMemory.csproj">
+      <Project>{35b5c872-d829-428f-9dfa-8ef2b4de194c}</Project>
+      <Name>ProcessMemory</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
