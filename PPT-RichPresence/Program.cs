@@ -1,25 +1,36 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Threading;
+
+using DiscordRPC;
 
 namespace PPT_RichPresence {
     static class Program {
         static ProcessMemory PPT = new ProcessMemory("puyopuyotetris");
+        static DiscordRpcClient Presence;
 
-        static NotifyIcon tray = new NotifyIcon {
+        static System.Windows.Forms.NotifyIcon tray = new System.Windows.Forms.NotifyIcon {
             Icon = Properties.Resources.TrayIcon,
             Text = "Puyo Puyo Tetris Rich Presence",
             Visible = true
         };
 
-        static Timer ScanTimer = new Timer {
-            Enabled = true,
-            Interval = 1000
-        };
+        static Timer ScanTimer = new Timer(new TimerCallback(Loop), null, Timeout.Infinite, 1000);
 
-        static void Loop(object sender, EventArgs e) {
+        static void Loop(object e) {
+            Presence.Invoke();
+
+            Presence.SetPresence(new RichPresence() {
+                Details = "In Match",
+                State = "Puzzle League",
+                Assets = new Assets() {
+                    LargeImageKey = "tetris",
+                    LargeImageText = "Versus (Tetris)",
+                }
+            });
+
             if (PPT.CheckProcess()) {
                 PPT.TrustProcess = true;
-
+                
                 // Game reads, update presence
 
                 PPT.TrustProcess = false;
@@ -28,7 +39,16 @@ namespace PPT_RichPresence {
 
         [STAThread]
         static void Main() {
-            ScanTimer.Tick += new EventHandler(Loop);
+            Presence = new DiscordRpcClient("539426896841277440");
+
+            Presence.OnReady += (sender, e) => {
+                tray.ShowBalloonTip(2, "Ready", $"User {e.User.Username}", System.Windows.Forms.ToolTipIcon.None);
+            };
+
+            Presence.Initialize();
+            ScanTimer.Change(0, 1000);
+
+            new ManualResetEvent(false).WaitOne();
         }
     }
 }
