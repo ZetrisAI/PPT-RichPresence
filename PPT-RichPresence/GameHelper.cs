@@ -121,6 +121,49 @@ namespace PPT_RichPresence {
             return 1;
         }
 
+        public static string ModeToString(int id) {
+            switch (id) {
+                case 0: return "Versus";
+                case 1: return "Fusion";
+                case 2: return "Swap";
+                case 3: return "Party";
+                case 4: return "Big Bang";
+                case 5: return "Versus (Endurance)";
+                case 6: return "Fusion (Endurance)";
+                case 7: return "Swap (Endurance)";
+                case 8: return "Party (Endurance)";
+                case 9: return "Big Bang (Endurance)";
+                case 10: return "Endless Fever";
+                case 11: return "Tiny Puyo";
+                case 12: return "Endless Puyo";
+                case 13: return "Sprint";
+                case 14: return "Marathon";
+                case 15: return "Ultra";
+            }
+
+            return "";
+        }
+
+        public static int GetMode(int major) {
+            switch (major) {
+                case 1:
+                case 2: return (Program.PPT.ReadByte(new IntPtr(
+                    0x140451C50
+                )) & 0b11101111) - 2;
+
+                case 4: return (Program.PPT.ReadByte(new IntPtr(
+                    0x1404385C4
+                )) > 0)
+                    ? Program.PPT.ReadByte(new IntPtr(
+                        0x140438584
+                    )) - 1
+                    : Program.PPT.ReadByte(new IntPtr(
+                        0x140573794
+                    ));
+            }
+            return 0;
+        }
+
         public static bool IsInitial() => (
             Program.PPT.ReadByte(new IntPtr(
                 0x1404640C2

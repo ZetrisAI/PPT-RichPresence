@@ -18,6 +18,7 @@ namespace PPT_RichPresence {
 
         static RichPresence GetState() {
             int? menuId = GameHelper.GetMenu();
+
             if (menuId.HasValue) {
                 return new RichPresence() {
                     Details = GameHelper.MenuToStringTop(menuId.Value),
@@ -26,40 +27,42 @@ namespace PPT_RichPresence {
                         LargeImageKey = "menu"
                     }
                 };
+            }
 
-            } else if (GameHelper.IsAdventure()) {
+            if (GameHelper.IsAdventure()) {
                 return new RichPresence() {
                     Details = "Adventure",
                     Assets = new Assets() {
                         LargeImageKey = "adventure"
                     }
                 };
+            }
 
-            } else if (GameHelper.IsInitial()) {
+            if (GameHelper.IsInitial()) {
                 return new RichPresence() {
                     Details = "Splash Screen",
                     Assets = new Assets() {
                         LargeImageKey = "menu"
                     }
                 };
-            
-            
-            } else if (GameHelper.IsCharacterSelect()) {
+            }
+
+            int majorId = GameHelper.GetMajorFromFlag();
+            string details = $"{GameHelper.MajorToString(majorId)} - {GameHelper.ModeToString(GameHelper.GetMode(majorId))}";
+
+            if (GameHelper.IsCharacterSelect()) {
                 return new RichPresence() {
-                    Details = GameHelper.MajorToString(
-                        GameHelper.GetMajorFromFlag()
-                    ),
+                    Details = details,
                     State = "Character Select",
                     Assets = new Assets() {
                         LargeImageKey = "menu"
                     }
                 };
+            }
 
-            } else if (GameHelper.IsLoading()) {
+            if (GameHelper.IsLoading()) {
                 return new RichPresence() {
-                    Details = GameHelper.MajorToString(
-                        GameHelper.GetMajorFromFlag()
-                    ),
+                    Details = details,
                     State = "Loading",
                     Assets = new Assets() {
                         LargeImageKey = "menu"
