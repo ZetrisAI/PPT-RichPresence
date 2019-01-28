@@ -16,23 +16,57 @@ namespace PPT_RichPresence {
 
         static Timer ScanTimer = new Timer(new TimerCallback(Loop), null, Timeout.Infinite, 1000);
 
+        static RichPresence GetState() {
+            int? menuId = GameHelper.GetMenu();
+            if (menuId.HasValue) {
+                return new RichPresence() {
+                    Details = "In Menu",
+                    State = GameHelper.MenuToString(menuId.Value),
+                    Assets = new Assets() {
+                        LargeImageKey = "menu"
+                    }
+                };
+
+            } else if (GameHelper.IsAdventure()) {
+                return new RichPresence() {
+                    Details = "Adventure",
+                    Assets = new Assets() {
+                        LargeImageKey = "adventure"
+                    }
+                };
+
+            } else if (GameHelper.IsInitial()) {
+                return new RichPresence() {
+                    Details = "Splash Screen",
+                    Assets = new Assets() {
+                        LargeImageKey = "menu"
+                    }
+                };
+            
+            
+            } else if (GameHelper.IsCharacterSelect()) {
+                return new RichPresence() {
+                    Details = "Character Select",
+                    Assets = new Assets() {
+                        LargeImageKey = "menu"
+                    }
+                };
+            }
+
+            return new RichPresence() {
+                Details = "Unknown",
+                Assets = new Assets() {
+                    LargeImageKey = "menu"
+                }
+            };
+        }
+
         static void Loop(object e) {
             Presence.Invoke();
             
             if (PPT.CheckProcess()) {
                 PPT.TrustProcess = true;
-
-                int? menuId = GameHelper.GetMenu();
-                if (menuId.HasValue) {
-                    Presence.SetPresence(new RichPresence() {
-                        Details = "In Menu",
-                        State = GameHelper.MenuToString(menuId.Value),
-                        Assets = new Assets() {
-                            LargeImageKey = "menu"
-                        }
-                    });
-                }
-
+                Presence.SetPresence(GetState());
                 PPT.TrustProcess = false;
             }
         }

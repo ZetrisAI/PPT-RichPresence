@@ -57,5 +57,27 @@ namespace PPT_RichPresence {
                 )) * 0x04
             ));
         }
+
+        private static byte GetMenuMajorMode() => Program.PPT.ReadByte(new IntPtr(
+            0x140573854
+        ));
+
+        public static bool IsInitial() => (
+            Program.PPT.ReadByte(new IntPtr(
+                0x1404640C2
+            )) & 0b00100000
+        ) == 0b00100000;
+
+        public static bool IsAdventure() => (
+            Program.PPT.ReadByte(new IntPtr(
+                0x140451C50
+            )) & 0b00000001
+        ) == 0b00000001 && GetMenuMajorMode() == 0;
+
+        public static bool IsCharacterSelect() => Program.PPT.ReadByte(new IntPtr(
+            Program.PPT.ReadInt32(new IntPtr(
+                0x140460690
+            )) + 0x274
+        )) > 0;
     }
 }
