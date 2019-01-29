@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading;
 
 using DiscordRPC;
@@ -20,13 +21,29 @@ namespace PPT_RichPresence {
             int? menuId = GameHelper.GetMenu();
 
             if (menuId.HasValue) {
-                return new RichPresence() {
+                RichPresence ret = new RichPresence() {
                     Details = GameHelper.MenuToStringTop(menuId.Value),
                     State = GameHelper.MenuToStringBottom(menuId.Value),
                     Assets = new Assets() {
                         LargeImageKey = "menu"
-                    }
+                    },
                 };
+
+                if (menuId == 27 /* Puzzle League Lobby */) ret.Party = new Party() {
+                    ID = Guid.Empty.ToString(),
+                    Size = GameHelper.LobbySize(),
+                    Max = 2
+                };
+
+                if (menuId == 28 /* Free Play Lobby */) {
+                    ret.Party = new Party() {
+                        ID = Guid.Empty.ToString(),
+                        Size = GameHelper.LobbySize(),
+                        Max = GameHelper.LobbyMax()
+                    };
+                }
+
+                return ret;
             }
 
             if (GameHelper.IsAdventure()) {

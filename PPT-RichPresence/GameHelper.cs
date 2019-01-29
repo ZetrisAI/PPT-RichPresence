@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PPT_RichPresence {
     static class GameHelper {
-        public static int PlayerCount() => Program.PPT.ReadInt32(new IntPtr(
+        public static int LobbySize() => Program.PPT.ReadInt32(new IntPtr(
             Program.PPT.ReadInt32(new IntPtr(
                 Program.PPT.ReadInt32(new IntPtr(
                     0x140473760
@@ -14,11 +14,19 @@ namespace PPT_RichPresence {
             )) + 0xB4
         ));
 
+        public static int LobbyMax() => Program.PPT.ReadInt32(new IntPtr(
+            Program.PPT.ReadInt32(new IntPtr(
+                Program.PPT.ReadInt32(new IntPtr(
+                    0x140473760
+                )) + 0x20
+            )) + 0xB8
+        ));
+
         public static int SteamID() => Program.PPT.ReadInt32(new IntPtr(
             0x1405A2010
         ));
 
-        public static int LobbySteamID(int index) => Program.PPT.ReadInt32(new IntPtr(
+        public static int PlayerSteamID(int index) => Program.PPT.ReadInt32(new IntPtr(
             Program.PPT.ReadInt32(new IntPtr(
                 Program.PPT.ReadInt32(new IntPtr(
                     0x140473760
@@ -27,7 +35,7 @@ namespace PPT_RichPresence {
         ));
 
         public static int FindPlayer() {
-            int players = PlayerCount();
+            int players = LobbySize();
 
             if (players < 2)
                 return 0;
@@ -35,10 +43,24 @@ namespace PPT_RichPresence {
             int steam = SteamID();
 
             for (int i = 0; i < players; i++)
-                if (steam == LobbySteamID(i))
+                if (steam == PlayerSteamID(i))
                     return i;
 
             return 0;
+        }
+
+        public static string LobbyInvite() {
+            long lobbyID = Program.PPT.ReadInt64(new IntPtr(
+                Program.PPT.ReadInt32(new IntPtr(
+                    Program.PPT.ReadInt32(new IntPtr(
+                        0x140473760
+                    )) + 0x20
+                )) + 0x378
+            ));
+
+            long steamID = SteamID() + 76561197960265728;
+
+            return $"steam://joinlobby/546050/{lobbyID}/{steamID}";
         }
 
         public static string MenuToStringTop(int id) {
@@ -96,7 +118,7 @@ namespace PPT_RichPresence {
                 case 25:
                 case 27: return "Matchmaking";
                 case 26:
-                case 28: return "Free Play";
+                case 28: return "In Lobby";
                 case 32: return "Replays";
                 case 33:
                 case 37: return "Replay Upload";
