@@ -48,14 +48,18 @@ namespace PPT_RichPresence {
             }
 
             int majorId = GameHelper.GetMajorFromFlag();
-            string details = $"{GameHelper.MajorToString(majorId)} - {GameHelper.ModeToString(GameHelper.GetMode(majorId))}";
+            int modeId = GameHelper.GetMode(majorId);
+            string details = GameHelper.MajorToString(majorId);
+            string largetext = GameHelper.ModeToString(modeId);
+            string largekey = GameHelper.ModeToImage(modeId);
 
             if (GameHelper.IsCharacterSelect()) {
                 return new RichPresence() {
                     Details = details,
                     State = "Character Select",
                     Assets = new Assets() {
-                        LargeImageKey = "menu"
+                        LargeImageKey = largekey,
+                        LargeImageText = largetext
                     }
                 };
             }
@@ -65,7 +69,23 @@ namespace PPT_RichPresence {
                     Details = details,
                     State = "Loading",
                     Assets = new Assets() {
-                        LargeImageKey = "menu"
+                        LargeImageKey = largekey,
+                        LargeImageText = largetext
+                    }
+                };
+            }
+
+            if (true /* in match */) {
+                string type = (modeId == 0 || modeId == 5 || modeId == 3 || modeId == 8 || modeId == 4 || modeId == 9)
+                    ? $" - {GameHelper.TypeToString(GameHelper.GetType(GameHelper.FindPlayer()))}"
+                    : "";
+
+                return new RichPresence() {
+                    Details = details,
+                    State = "Match",
+                    Assets = new Assets() {
+                        LargeImageKey = largekey,
+                        LargeImageText = largetext + type
                     }
                 };
             }

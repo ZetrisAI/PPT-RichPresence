@@ -6,6 +6,41 @@ using System.Threading.Tasks;
 
 namespace PPT_RichPresence {
     static class GameHelper {
+        public static int PlayerCount() => Program.PPT.ReadInt32(new IntPtr(
+            Program.PPT.ReadInt32(new IntPtr(
+                Program.PPT.ReadInt32(new IntPtr(
+                    0x140473760
+                )) + 0x20
+            )) + 0xB4
+        ));
+
+        public static int SteamID() => Program.PPT.ReadInt32(new IntPtr(
+            0x1405A2010
+        ));
+
+        public static int LobbySteamID(int index) => Program.PPT.ReadInt32(new IntPtr(
+            Program.PPT.ReadInt32(new IntPtr(
+                Program.PPT.ReadInt32(new IntPtr(
+                    0x140473760
+                )) + 0x20
+            )) + 0x118 + index * 0x50
+        ));
+
+        public static int FindPlayer() {
+            int players = PlayerCount();
+
+            if (players < 2)
+                return 0;
+
+            int steam = SteamID();
+
+            for (int i = 0; i < players; i++)
+                if (steam == LobbySteamID(i))
+                    return i;
+
+            return 0;
+        }
+
         public static string MenuToStringTop(int id) {
             switch (id) {
                 case 0: return "Initial Screen";
@@ -144,6 +179,29 @@ namespace PPT_RichPresence {
             return "";
         }
 
+        public static string ModeToImage(int id) {
+            switch (id) {
+                case 0:
+                case 5: return "versus";
+                case 1:
+                case 6: return "fusion";
+                case 2:
+                case 7: return "swap";
+                case 3:
+                case 8: return "party";
+                case 4:
+                case 9: return "bigbang";
+                case 10: return "endlessfever";
+                case 11: return "tinypuyo";
+                case 12: return "endlesspuyo";
+                case 13: return "sprint";
+                case 14: return "marathon";
+                case 15: return "ultra";
+            }
+
+            return "";
+        }
+
         public static int GetMode(int major) {
             switch (major) {
                 case 1:
@@ -163,6 +221,21 @@ namespace PPT_RichPresence {
             }
             return 0;
         }
+
+        public static string TypeToString(int id) {
+            switch (id) {
+                case 0: return "Puyo";
+                case 1: return "Tetris";
+            }
+
+            return "";
+        }
+
+        public static int GetType(int index) => (
+            Program.PPT.ReadByte(new IntPtr(
+                0x140598C27 + index * 0x68
+            )) & 0b01000000
+        ) >> 6;
 
         public static bool IsInitial() => (
             Program.PPT.ReadByte(new IntPtr(
