@@ -52,11 +52,9 @@ namespace PPT_RichPresence {
                 ret.Details = GameHelper.MenuToStringTop(menuId.Value);
                 ret.State = GameHelper.MenuToStringBottom(menuId.Value);
 
-                if (menuId == 27 /* Puzzle League Lobby */ || menuId == 28 /* Free Play Lobby */) ret.Party = new Party() {
-                    ID = Guid.Empty.ToString(),
-                    Size = GameHelper.LobbySize(),
-                    Max = GameHelper.LobbyMax()
-                };
+                if (menuId == 27 /* Puzzle League Lobby */ || menuId == 28 /* Free Play Lobby */) {
+                    ret.Details += $" ({GameHelper.LobbySize()} / {GameHelper.LobbyMax()})";
+                }
 
                 return ret;
             }
@@ -78,11 +76,9 @@ namespace PPT_RichPresence {
             ret.Assets.LargeImageText = GameHelper.ModeToString(modeId);
             ret.Assets.LargeImageKey = GameHelper.ModeToImage(modeId);
 
-            if (GameHelper.GetOnlineType() == 1 /* Free Play */) ret.Party = new Party() {
-                ID = Guid.Empty.ToString(),
-                Size = GameHelper.LobbySize(),
-                Max = GameHelper.LobbyMax()
-            };
+            if (GameHelper.GetOnlineType() == 1 /* Free Play */) {
+                ret.Details += $" ({GameHelper.LobbySize()} / {GameHelper.LobbyMax()})";
+            }
 
             if (GameHelper.IsCharacterSelect()) {
                 ret.State = "Character Select";
@@ -105,12 +101,6 @@ namespace PPT_RichPresence {
                 ) + $" ({GameHelper.GetScore()})";
 
                 ret.Assets.LargeImageText += type;
-
-                if (GameHelper.GetOnlineType() == 0 /* Puzzle League */) {
-
-                } else /* Free Play */ {
-                    
-                }
 
                 return ret;
             }
