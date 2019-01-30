@@ -98,7 +98,11 @@ namespace PPT_RichPresence {
                 return ret;
             }
 
-            return ret;
+            return new RichPresence() {
+                Assets = new Assets() {
+                    LargeImageKey = "menu"
+                }
+            };
         }
 
         static void Loop(object e) {
@@ -108,6 +112,9 @@ namespace PPT_RichPresence {
                 PPT.TrustProcess = true;
                 Presence.SetPresence(GetState());
                 PPT.TrustProcess = false;
+
+            } else {
+                Presence.ClearPresence();
             }
         }
 
@@ -125,6 +132,7 @@ namespace PPT_RichPresence {
 
             ScanTimer.Dispose();
 
+            Presence.ClearPresence();
             Presence.Dispose();
         }
     }
