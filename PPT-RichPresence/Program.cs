@@ -94,11 +94,18 @@ namespace PPT_RichPresence {
                 ? $" - {GameHelper.TypeToString(GameHelper.GetType(GameHelper.FindPlayer()))}"
                 : "";
 
+            if (GameHelper.IsPregame()) {
+                ret.State = "Pregame";
+                ret.Assets.LargeImageText += type;
+                return ret;
+            }
+
             if (GameHelper.IsMatch()) {
-                ret.State = ((GameHelper.LobbySize() == 2)
+                ret.State = (GameHelper.LobbySize() == 2)
                     ? $"vs. {GameHelper.MatchPlayerName(1 - GameHelper.FindPlayer())}"
-                    : "Match"
-                ) + $" ({GameHelper.GetScore()})";
+                    : "Match";
+
+                if (majorId == 4) ret.State += $" ({GameHelper.GetScore()})";
 
                 ret.Assets.LargeImageText += type;
 

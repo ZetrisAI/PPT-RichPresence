@@ -310,6 +310,16 @@ namespace PPT_RichPresence {
             return P1State > 0 && P1State < 16;
         }
 
+        public static bool IsPregame() {
+            int pointer = Program.PPT.ReadByte(new IntPtr(
+                Program.PPT.ReadInt32(new IntPtr(
+                    0x140460690
+                )) + 0x280
+            ));
+
+            return pointer != 0 && pointer != -1;
+        }
+
         public static bool IsMatch() => Program.PPT.ReadInt32(new IntPtr(
             Program.PPT.ReadInt32(new IntPtr(
                 0x140461B20
