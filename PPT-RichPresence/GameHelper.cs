@@ -310,6 +310,74 @@ namespace PPT_RichPresence {
             return P1State > 0 && P1State < 16;
         }
 
+        public static string CharacterToString(int id) {
+            switch (id) {
+                case 0: return "Ringo";
+                case 1: return "Risukuma";
+                case 2: return "Maguro";
+                case 3: return "Amitie";
+                case 4: return "Klug";
+                case 5: return "Sig";
+                case 6: return "Arle & Carbuncle";
+                case 7: return "Suketoudara";
+                case 8: return "Schezo";
+                case 9: return "Draco Centauros";
+                case 10: return "Witch";
+                case 11: return "Lemres";
+                case 12: return "Jay & Elle";
+                case 13: return "Ai";
+                case 14: return "Ess";
+                case 15: return "Zed";
+                case 16: return "O";
+                case 17: return "Tee";
+                case 18: return "Raffina";
+                case 19: return "Rulue";
+                case 20: return "Feli";
+                case 21: return "Dark Prince";
+                case 22: return "Ecolo";
+                case 23: return "Ex";
+            }
+
+            return "";
+        }
+
+        public static string CharacterToImage(int id) {
+            switch (id) {
+                case 0: return "ringo";
+                case 1: return "risukuma";
+                case 2: return "maguro";
+                case 3: return "amitie";
+                case 4: return "klug";
+                case 5: return "sig";
+                case 6: return "arle";
+                case 7: return "suketoudara";
+                case 8: return "schezo";
+                case 9: return "draco";
+                case 10: return "witch";
+                case 11: return "lemres";
+                case 12: return "jayelle";
+                case 13: return "ai";
+                case 14: return "ess";
+                case 15: return "zed";
+                case 16: return "o";
+                case 17: return "tee";
+                case 18: return "raffina";
+                case 19: return "rulue";
+                case 20: return "feli";
+                case 21: return "satan";
+                case 22: return "ecolo";
+                case 23: return "ex";
+            }
+
+            return "";
+        }
+
+        public static int GetCharacter(int index) => (
+            Program.PPT.ReadByte(new IntPtr(
+                0x140598C28 + index * 0x68
+            ))
+        );
+
         public static bool IsPregame() {
             int pointer = Program.PPT.ReadByte(new IntPtr(
                 Program.PPT.ReadInt32(new IntPtr(

@@ -90,9 +90,16 @@ namespace PPT_RichPresence {
                 return ret;
             }
 
+            int playerId = GameHelper.FindPlayer();
+
             string type = (modeId == 0 || modeId == 5 || modeId == 3 || modeId == 8 || modeId == 4 || modeId == 9)
-                ? $" - {GameHelper.TypeToString(GameHelper.GetType(GameHelper.FindPlayer()))}"
+                ? $" - {GameHelper.TypeToString(playerId)}"
                 : "";
+
+            int characterId = GameHelper.GetCharacter(playerId);
+
+            ret.Assets.SmallImageText = GameHelper.CharacterToString(characterId);
+            ret.Assets.SmallImageKey = GameHelper.CharacterToImage(characterId);
 
             if (GameHelper.IsPregame()) {
                 ret.State = "Pregame";
@@ -102,7 +109,7 @@ namespace PPT_RichPresence {
 
             if (GameHelper.IsMatch()) {
                 ret.State = (GameHelper.LobbySize() == 2)
-                    ? $"vs. {GameHelper.MatchPlayerName(1 - GameHelper.FindPlayer())}"
+                    ? $"vs. {GameHelper.MatchPlayerName(1 - playerId)}"
                     : "Match";
 
                 if (majorId == 4) ret.State += $" ({GameHelper.GetScore()})";
