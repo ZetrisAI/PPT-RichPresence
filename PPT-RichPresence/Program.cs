@@ -40,16 +40,17 @@ namespace PPT_RichPresence {
         static Timer ScanTimer = new Timer(new TimerCallback(Loop), null, Timeout.Infinite, 1000);
 
         static RichPresence GetState() {
+            RichPresence ret = new RichPresence() {
+                Assets = new Assets() {
+                    LargeImageKey = "menu"
+                }
+            };
+
             int? menuId = GameHelper.GetMenu();
 
             if (menuId.HasValue) {
-                RichPresence ret = new RichPresence() {
-                    Details = GameHelper.MenuToStringTop(menuId.Value),
-                    State = GameHelper.MenuToStringBottom(menuId.Value),
-                    Assets = new Assets() {
-                        LargeImageKey = "menu"
-                    },
-                };
+                ret.Details = GameHelper.MenuToStringTop(menuId.Value);
+                ret.State = GameHelper.MenuToStringBottom(menuId.Value);
 
                 if (menuId == 27 /* Puzzle League Lobby */ || menuId == 28 /* Free Play Lobby */) ret.Party = new Party() {
                     ID = Guid.Empty.ToString(),
@@ -61,71 +62,43 @@ namespace PPT_RichPresence {
             }
 
             if (GameHelper.IsAdventure()) {
-                return new RichPresence() {
-                    Details = "Adventure",
-                    Assets = new Assets() {
-                        LargeImageKey = "adventure"
-                    }
-                };
+                ret.Details = "Adventure";
+                ret.Assets.LargeImageKey = "adventure";
+                return ret;
             }
 
             if (GameHelper.IsInitial()) {
-                return new RichPresence() {
-                    Details = "Splash Screen",
-                    Assets = new Assets() {
-                        LargeImageKey = "menu"
-                    }
-                };
+                ret.Details = "Splash Screen";
+                return ret;
             }
 
             int majorId = GameHelper.GetMajorFromFlag();
             int modeId = GameHelper.GetMode(majorId);
-            string details = GameHelper.MajorToString(majorId);
-            string largetext = GameHelper.ModeToString(modeId);
-            string largekey = GameHelper.ModeToImage(modeId);
+            ret.Details = GameHelper.MajorToString(majorId);
+            ret.Assets.LargeImageText = GameHelper.ModeToString(modeId);
+            ret.Assets.LargeImageKey = GameHelper.ModeToImage(modeId);
 
             if (GameHelper.IsCharacterSelect()) {
-                return new RichPresence() {
-                    Details = details,
-                    State = "Character Select",
-                    Assets = new Assets() {
-                        LargeImageKey = largekey,
-                        LargeImageText = largetext
-                    }
-                };
+                ret.State = "Character Select";
+                return ret;
             }
 
             if (GameHelper.IsLoading()) {
-                return new RichPresence() {
-                    Details = details,
-                    State = "Loading",
-                    Assets = new Assets() {
-                        LargeImageKey = largekey,
-                        LargeImageText = largetext
-                    }
-                };
+                ret.State = "Loading";
+                return ret;
             }
+
+            string type = (modeId == 0 || modeId == 5 || modeId == 3 || modeId == 8 || modeId == 4 || modeId == 9)
+                ? $" - {GameHelper.TypeToString(GameHelper.GetType(GameHelper.FindPlayer()))}"
+                : "";
 
             if (GameHelper.IsMatch()) {
-                string type = (modeId == 0 || modeId == 5 || modeId == 3 || modeId == 8 || modeId == 4 || modeId == 9)
-                    ? $" - {GameHelper.TypeToString(GameHelper.GetType(GameHelper.FindPlayer()))}"
-                    : "";
-
-                return new RichPresence() {
-                    Details = details,
-                    State = "Match",
-                    Assets = new Assets() {
-                        LargeImageKey = largekey,
-                        LargeImageText = largetext + type
-                    }
-                };
+                ret.State = "Match";
+                ret.Assets.LargeImageText += type;
+                return ret;
             }
 
-            return new RichPresence() {
-                Assets = new Assets() {
-                    LargeImageKey = "menu"
-                }
-            };
+            return ret;
         }
 
         static void Loop(object e) {

@@ -147,7 +147,7 @@ namespace PPT_RichPresence {
                 case 1: return "Solo Arcade";
                 case 2: return "Multiplayer Arcade";
                 case 3: return "Options & Data";
-                case 4: return "Online";
+                case 4: return $"Online - {OnlineTypeToString(GetOnlineType())}";
                 case 5: return "Lessons";
             }
 
@@ -258,6 +258,19 @@ namespace PPT_RichPresence {
                 0x140598C27 + index * 0x68
             )) & 0b01000000
         ) >> 6;
+
+        public static string OnlineTypeToString(int id) {
+            switch (id) {
+                case 0: return "Puzzle League";
+                case 1: return "Free Play";
+            }
+
+            return "";
+        }
+
+        public static int GetOnlineType() => Program.PPT.ReadByte(new IntPtr(
+            0x1404385C4
+        )) & 0b00000001;
 
         public static bool IsInitial() => (
             Program.PPT.ReadByte(new IntPtr(
