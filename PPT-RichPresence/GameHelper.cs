@@ -279,20 +279,11 @@ namespace PPT_RichPresence {
             return P1State > 0 && P1State < 16;
         }
 
-        public static bool InMatch()
-        {
-            return Program.PPT.ReadInt32((IntPtr)
-                        Program.PPT.ReadInt32((IntPtr)
-                            Program.PPT.ReadInt32((IntPtr)
-                                Program.PPT.ReadInt32((IntPtr)
-                                    Program.PPT.ReadInt32(
-                                        (IntPtr)5368709120 + 0x460c08
-                                    ) + 0x18
-                                ) + 0x268
-                            ) + 0x140
-                        ) + 0x58
-                    ) > 0; //Framecount > 0
-        }
+        public static bool IsMatch() => Program.PPT.ReadInt32(new IntPtr(
+            Program.PPT.ReadInt32(new IntPtr(
+                0x140461B20
+            )) + 0x424
+        )) > 0;
 
         public static bool IsLoading() => Program.PPT.ReadByte(new IntPtr(
             0x14059140F
