@@ -99,9 +99,10 @@ namespace PPT_RichPresence {
                 : "";
 
             if (GameHelper.IsMatch()) {
-                ret.State = (GameHelper.LobbySize() == 2)
-                    ? $"vs. {GameHelper.MatchPlayerName(1 - GameHelper.FindPlayer())} ({GameHelper.GetScore()})"
-                    : "Match";
+                ret.State = ((GameHelper.LobbySize() == 2)
+                    ? $"vs. {GameHelper.MatchPlayerName(1 - GameHelper.FindPlayer())}"
+                    : "Match"
+                ) + $" ({GameHelper.GetScore()})";
 
                 ret.Assets.LargeImageText += type;
 
