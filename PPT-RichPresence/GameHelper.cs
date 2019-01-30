@@ -63,9 +63,28 @@ namespace PPT_RichPresence {
             return $"steam://joinlobby/546050/{lobbyID}/{steamID}";
         }
 
+        public static string GetScore() {
+            List<int> scores = new List<int>();
+            int me = FindPlayer();
+
+            for (int i = 0; i < LobbyMax(); i++) {
+                int score = Program.PPT.ReadInt32(new IntPtr(
+                    Program.PPT.ReadInt32(new IntPtr(
+                        0x14057F048
+                    )) + 0x38 + i * 0x04
+                ));
+
+                if (i == me) scores.Insert(0, score);
+                else scores.Add(score);
+            }
+
+            return string.Join(" - ", scores);
+        }
+
         public static string MenuToStringTop(int id) {
             switch (id) {
-                case 0: return "Initial Screen";
+                case 0:
+                case 12: return "Loading";
                 case 1: return "Main Menu";
                 case 2: return "Adventure";
                 case 3:
@@ -81,7 +100,6 @@ namespace PPT_RichPresence {
                 case 33:
                 case 37: return "Online";
                 case 11: return "Lessons";
-                case 12: return "Loading";
                 case 13:
                 case 14:
                 case 15:
@@ -297,6 +315,10 @@ namespace PPT_RichPresence {
                 0x140461B20
             )) + 0x424
         )) > 0;
+
+        public static string MatchPlayerName(int index) => Program.PPT.ReadStringUnicode(new IntPtr(
+            0x140598BD4 + index * 0x68
+        ), 32).Split('\0')[0];
 
         public static bool IsLoading() => Program.PPT.ReadByte(new IntPtr(
             0x14059140F
