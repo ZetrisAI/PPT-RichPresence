@@ -54,7 +54,7 @@ namespace PPT_RichPresence {
                 ret.Details = GameHelper.MenuToStringTop(menuId.Value);
                 ret.State = GameHelper.MenuToStringBottom(menuId.Value);
 
-                if (menuId == 27 /* Puzzle League Lobby */ || menuId == 28 /* Free Play Lobby */) {
+                if (menuId == 28 /* Free Play Lobby */) {
                     ret.Details += $" ({GameHelper.LobbySize()} / {GameHelper.LobbyMax()})";
                 }
 
@@ -87,10 +87,11 @@ namespace PPT_RichPresence {
                 return ret;
             }
 
-            if (GameHelper.IsLoading()) {
+            // Disabled until better understood
+            /*if (GameHelper.IsLoading()) {
                 ret.State = "Loading";
                 return ret;
-            }
+            }*/
 
             int playerId = GameHelper.FindPlayer();
 
@@ -157,6 +158,8 @@ namespace PPT_RichPresence {
             System.Windows.Forms.Application.Run();
 
             ScanTimer.Dispose();
+            
+            tray.Dispose();
 
             Presence.ClearPresence();
             Presence.Dispose();
