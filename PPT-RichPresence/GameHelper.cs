@@ -389,10 +389,8 @@ namespace PPT_RichPresence {
         }
 
         public static bool IsMatch() => Program.PPT.ReadInt32(new IntPtr(
-            Program.PPT.ReadInt32(new IntPtr(
-                0x140461B20
-            )) + 0x424
-        )) > 0;
+            0x140461B20
+        )) != 0;
 
         public static string MatchPlayerName(int index) => Program.PPT.ReadStringUnicode(new IntPtr(
             0x140598BD4 + index * 0x68

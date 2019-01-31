@@ -39,7 +39,9 @@ namespace PPT_RichPresence {
 
         static Timer ScanTimer = new Timer(new TimerCallback(Loop), null, Timeout.Infinite, 1000);
 
-        static RichPresence GetState() {
+        static RichPresence GetState(out bool success) {
+            success = true;
+
             RichPresence ret = new RichPresence() {
                 Assets = new Assets() {
                     LargeImageKey = "menu"
@@ -119,6 +121,8 @@ namespace PPT_RichPresence {
                 return ret;
             }
 
+            success = false;
+
             return new RichPresence() {
                 Assets = new Assets() {
                     LargeImageKey = "menu"
@@ -128,15 +132,16 @@ namespace PPT_RichPresence {
 
         static void Loop(object e) {
             Presence.Invoke();
-            
+
             if (PPT.CheckProcess()) {
                 PPT.TrustProcess = true;
-                Presence.SetPresence(GetState());
+
+                RichPresence GameState = GetState(out bool success);
+                if (success) Presence.SetPresence(GameState);
+
                 PPT.TrustProcess = false;
 
-            } else {
-                Presence.ClearPresence();
-            }
+            } else Presence.ClearPresence();
         }
 
         [STAThread]
