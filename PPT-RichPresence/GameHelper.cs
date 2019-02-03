@@ -62,17 +62,19 @@ namespace PPT_RichPresence {
 
         public static string GetScore() {
             List<int> scores = new List<int>();
+            int size = LobbySize();
             int me = FindPlayer();
 
-            for (int i = 0; i < LobbyMax(); i++) {
+            for (int i = 0; i < size; i++) {
                 int score = Program.PPT.ReadInt32(new IntPtr(
                     Program.PPT.ReadInt32(new IntPtr(
                         0x14057F048
                     )) + 0x38 + i * 0x04
                 ));
 
-                if (i == me) scores.Insert(0, score);
-                else scores.Add(score);
+                if (i == me && size > 2) {
+                    scores.Insert(0, score);
+                } else scores.Add(score);
             }
 
             return string.Join(" - ", scores);
