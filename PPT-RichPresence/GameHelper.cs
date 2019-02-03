@@ -286,7 +286,7 @@ namespace PPT_RichPresence {
         }
 
         public static int GetOnlineType() => Program.PPT.ReadByte(new IntPtr(
-            0x1404385C4
+            0x140573797
         )) & 0b00000001;
 
         public static bool IsInitial() => (
