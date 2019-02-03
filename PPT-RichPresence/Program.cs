@@ -124,7 +124,7 @@ namespace PPT_RichPresence {
             int playerId = GameHelper.FindPlayer();
 
             string type = (modeId == 0 || modeId == 5 || modeId == 3 || modeId == 8 || modeId == 4 || modeId == 9)
-                ? $" - {GameHelper.TypeToString(playerId)}"
+                ? $" - {GameHelper.TypeToString(GameHelper.GetType(playerId))}"
                 : "";
 
             int characterId = GameHelper.GetCharacter(playerId);
