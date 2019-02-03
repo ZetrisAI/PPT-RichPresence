@@ -10,6 +10,8 @@ namespace PPT_RichPresence {
         public static ProcessMemory PPT = new ProcessMemory("puyopuyotetris");
         static DiscordRpcClient Presence;
 
+        static readonly string ShortcutPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Startup)}\\PPT-RichPresence.lnk";
+
         static NotifyIcon tray = new NotifyIcon {
             ContextMenu = new ContextMenu(new MenuItem[] {
                 new MenuItem("Copy Invite Link", new EventHandler(CopyInviteLink)),
@@ -36,8 +38,6 @@ namespace PPT_RichPresence {
                 }
             }
         }
-
-        static readonly string ShortcutPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Startup)}\\PPT-RichPresence.lnk";
 
         static void Shortcut(object sender, EventArgs e) {
             if (((MenuItem)sender).Checked) {
