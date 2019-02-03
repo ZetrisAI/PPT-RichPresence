@@ -108,7 +108,7 @@ namespace PPT_RichPresence {
                 case 20:
                 case 25:
                 case 27:
-                case 35: return "Online - Puzzle League";
+                case 34: return "Online - Puzzle League";
                 case 21:
                 case 23:
                 case 24:
@@ -139,7 +139,7 @@ namespace PPT_RichPresence {
                 case 32: return "Replays";
                 case 33:
                 case 37: return "Replay Upload";
-                case 35: return "Rankings";
+                case 34: return "Rankings";
             }
             return "";
         }
