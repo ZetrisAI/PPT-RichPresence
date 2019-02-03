@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Threading;
+using System.Diagnostics;
+using System.IO;
+using System.Windows.Forms;
 
 using DiscordRPC;
 
@@ -8,19 +10,21 @@ namespace PPT_RichPresence {
         public static ProcessMemory PPT = new ProcessMemory("puyopuyotetris");
         static DiscordRpcClient Presence;
 
-        static System.Windows.Forms.NotifyIcon tray = new System.Windows.Forms.NotifyIcon {
-            ContextMenu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[] {
-                new System.Windows.Forms.MenuItem("Copy Invite Link", new EventHandler(CopyInviteLink)),
-                new System.Windows.Forms.MenuItem("-"),
-                new System.Windows.Forms.MenuItem("Exit", new EventHandler(Close))
+        static NotifyIcon tray = new NotifyIcon {
+            ContextMenu = new ContextMenu(new MenuItem[] {
+                new MenuItem("Copy Invite Link", new EventHandler(CopyInviteLink)),
+                new MenuItem("-"),
+                new MenuItem("Run on Startup", new EventHandler(Shortcut)) {
+                    Checked = File.Exists(ShortcutPath)
+                },
+                new MenuItem("Exit", new EventHandler(Close))
             }),
             Icon = Properties.Resources.TrayIcon,
-            Text = "Puyo Puyo Tetris Rich Presence",
-            Visible = true
+            Text = "Puyo Puyo Tetris Rich Presence"
         };
 
         static void CheckFreePlayLobby(object sender, EventArgs e) {
-            ((System.Windows.Forms.ContextMenu)sender).MenuItems[0].Enabled = GameHelper.GetMenu() == 28;
+            ((ContextMenu)sender).MenuItems[0].Enabled = GameHelper.GetMenu() == 28;
         }
 
         static void CopyInviteLink(object sender, EventArgs e) {
@@ -28,16 +32,40 @@ namespace PPT_RichPresence {
 
             if (menuId.HasValue) {
                 if (menuId == 28 /* Free Play Lobby */) {
-                    System.Windows.Forms.Clipboard.SetText(GameHelper.LobbyInvite());
+                    Clipboard.SetText(GameHelper.LobbyInvite());
                 }
             }
         }
 
-        static void Close(object sender, EventArgs e) {
-            System.Windows.Forms.Application.Exit();
+        static readonly string ShortcutPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Startup)}\\PPT-RichPresence.lnk";
+
+        static void Shortcut(object sender, EventArgs e) {
+            if (((MenuItem)sender).Checked) {
+                File.Delete(ShortcutPath);
+                ((MenuItem)sender).Checked = false;
+
+            } else if (Path.GetFullPath(Application.ExecutablePath).StartsWith(Path.GetTempPath())) {
+                MessageBox.Show(
+                    "It appears you're running PPT-RichPresence from an archive file. Please extract the program to use this feature.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning
+                );
+
+            } else {
+                IWshRuntimeLibrary.IWshShortcut shortcut = new IWshRuntimeLibrary.WshShell().CreateShortcut(ShortcutPath);
+
+                shortcut.Description = "Discord Rich Presence for Puyo Puyo Tetris.";
+                shortcut.TargetPath = Path.GetFullPath(Application.ExecutablePath);
+                shortcut.Save();
+
+                ((MenuItem)sender).Checked = true;
+            }
         }
 
-        static Timer ScanTimer = new Timer(new TimerCallback(Loop), null, Timeout.Infinite, 1000);
+        static void Close(object sender, EventArgs e) {
+            Application.Exit();
+        }
+
+        static System.Threading.Timer ScanTimer = new System.Threading.Timer(new System.Threading.TimerCallback(Loop), null, System.Threading.Timeout.Infinite, 1000);
 
         static RichPresence GetState(out bool success) {
             success = true;
@@ -147,15 +175,24 @@ namespace PPT_RichPresence {
 
         [STAThread]
         static void Main() {
+            if (Process.GetProcessesByName("PPT-RichPresence").Length > 1) {
+                MessageBox.Show(
+                    "Another instance of PPT-RichPresence is already running. Check your tray.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error
+                );
+                return;
+            }
+
             Presence = new DiscordRpcClient("539426896841277440");
             //Presence.OnReady += (sender, e) => {};
             Presence.Initialize();
 
+            tray.Visible = true;
             tray.ContextMenu.Popup += CheckFreePlayLobby;
 
             ScanTimer.Change(0, 1000);
 
-            System.Windows.Forms.Application.Run();
+            Application.Run();
 
             ScanTimer.Dispose();
             
