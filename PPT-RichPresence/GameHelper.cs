@@ -398,5 +398,9 @@ namespace PPT_RichPresence {
         public static bool IsLoading() => Program.PPT.ReadByte(new IntPtr(
             0x14059140F
         )) > 0;
+
+        public static bool IsReplay() => Program.PPT.ReadByte(new IntPtr(
+            0x140598BC8
+        )) != 0;
     }
 }

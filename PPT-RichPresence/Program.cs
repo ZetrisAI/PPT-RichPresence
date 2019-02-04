@@ -100,6 +100,11 @@ namespace PPT_RichPresence {
                 return ret;
             }
 
+            if (GameHelper.IsReplay()) {
+                ret.Details = "Watching a Replay";
+                return ret;
+            }
+
             int majorId = GameHelper.GetMajorFromFlag();
             int modeId = GameHelper.GetMode(majorId);
             ret.Details = GameHelper.MajorToString(majorId);
