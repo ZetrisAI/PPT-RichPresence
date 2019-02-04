@@ -33,7 +33,7 @@ namespace PPT_RichPresence {
             int? menuId = GameHelper.GetMenu();
 
             if (menuId.HasValue) {
-                if (menuId == 28 /* Free Play Lobby */) {
+                if (menuId == 28) {
                     Clipboard.SetText(GameHelper.LobbyInvite());
                 }
             }
@@ -82,7 +82,7 @@ namespace PPT_RichPresence {
                 ret.Details = GameHelper.MenuToStringTop(menuId.Value);
                 ret.State = GameHelper.MenuToStringBottom(menuId.Value);
 
-                if (menuId == 28 /* Free Play Lobby */) {
+                if (menuId == 28) {
                     ret.Details += $" ({GameHelper.LobbySize()} / {GameHelper.LobbyMax()})";
                 }
 
@@ -101,7 +101,7 @@ namespace PPT_RichPresence {
             }
 
             if (GameHelper.IsReplay()) {
-                ret.Details = "Watching a Replay";
+                ret.Details = (GameHelper.IsLocalReplay())? "Watching a Replay": "Watching an Online Replay";
                 return ret;
             }
 
@@ -111,7 +111,7 @@ namespace PPT_RichPresence {
             ret.Assets.LargeImageText = GameHelper.ModeToString(modeId);
             ret.Assets.LargeImageKey = GameHelper.ModeToImage(modeId);
 
-            if (GameHelper.GetOnlineType() == 1 /* Free Play */) {
+            if (GameHelper.GetOnlineType() == 1) {
                 ret.Details += $" ({GameHelper.LobbySize()} / {GameHelper.LobbyMax()})";
             }
 
@@ -143,7 +143,7 @@ namespace PPT_RichPresence {
                 return ret;
             }
 
-            if (GameHelper.IsMatch()) {
+            if (GameHelper.IsMatch() && type != "") {
                 ret.State = (GameHelper.LobbySize() == 2)
                     ? $"vs. {GameHelper.MatchPlayerName(1 - playerId)}"
                     : "Match";
@@ -189,7 +189,6 @@ namespace PPT_RichPresence {
             }
 
             Presence = new DiscordRpcClient("539426896841277440");
-            //Presence.OnReady += (sender, e) => {};
             Presence.Initialize();
 
             tray.Visible = true;

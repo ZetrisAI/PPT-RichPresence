@@ -400,6 +400,14 @@ namespace PPT_RichPresence {
         )) > 0;
 
         public static bool IsReplay() => Program.PPT.ReadByte(new IntPtr(
+            Program.PPT.ReadInt32(new IntPtr(
+                Program.PPT.ReadInt32(new IntPtr(
+                    0x1405989D0
+                )) + 0x40
+            )) + 0x28
+        )) != 0;
+
+        public static bool IsLocalReplay() => Program.PPT.ReadByte(new IntPtr(
             0x140598BC8
         )) != 0;
     }
