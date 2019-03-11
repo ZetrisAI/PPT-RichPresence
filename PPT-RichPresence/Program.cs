@@ -143,7 +143,7 @@ namespace PPT_RichPresence {
                 return ret;
             }
 
-            if (GameHelper.IsMatch() && type != "") {
+            if (GameHelper.IsMatch()) {
                 ret.State = (GameHelper.LobbySize() == 2)
                     ? $"vs. {GameHelper.MatchPlayerName(1 - playerId)}"
                     : "Match";
