@@ -15,6 +15,7 @@ namespace PPT_RichPresence {
         static NotifyIcon tray = new NotifyIcon {
             ContextMenu = new ContextMenu(new MenuItem[] {
                 new MenuItem("Copy Invite Link", new EventHandler(CopyInviteLink)),
+                new MenuItem("Unsoftlock", new EventHandler(Unsoftlock)),
                 new MenuItem("-"),
                 new MenuItem("Run on Startup", new EventHandler(Shortcut)) {
                     Checked = File.Exists(ShortcutPath)
@@ -25,32 +26,30 @@ namespace PPT_RichPresence {
             Text = "Puyo Puyo Tetris Rich Presence"
         };
 
-        static void CheckFreePlayLobby(object sender, EventArgs e) {
-            ((ContextMenu)sender).MenuItems[0].Enabled = GameHelper.GetMenu() == 28;
-        }
+        static void CheckFreePlayLobby(object sender, EventArgs e) => ((ContextMenu)sender).MenuItems[0].Enabled = GameHelper.GetMenu() == 28;
 
         static void CopyInviteLink(object sender, EventArgs e) {
             int? menuId = GameHelper.GetMenu();
 
-            if (menuId.HasValue) {
-                if (menuId == 28) {
+            if (menuId.HasValue)
+                if (menuId == 28)
                     Clipboard.SetText(GameHelper.LobbyInvite());
-                }
-            }
         }
+
+        static void Unsoftlock(object sender, EventArgs e) => Process.Start("steam://joinlobby/546050/109775241058543776/76561198802063829");
 
         static void Shortcut(object sender, EventArgs e) {
             if (((MenuItem)sender).Checked) {
                 File.Delete(ShortcutPath);
                 ((MenuItem)sender).Checked = false;
 
-            } else if (Path.GetFullPath(Application.ExecutablePath).StartsWith(Path.GetTempPath())) {
+            } else if (Path.GetFullPath(Application.ExecutablePath).StartsWith(Path.GetTempPath()))
                 MessageBox.Show(
                     "It appears you're running PPT-RichPresence from an archive file. Please extract the program to use this feature.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning
                 );
 
-            } else {
+            else {
                 IWshRuntimeLibrary.IWshShortcut shortcut = new IWshRuntimeLibrary.WshShell().CreateShortcut(ShortcutPath);
 
                 shortcut.Description = "Discord Rich Presence for Puyo Puyo Tetris.";
@@ -61,9 +60,7 @@ namespace PPT_RichPresence {
             }
         }
 
-        static void Close(object sender, EventArgs e) {
-            Application.Exit();
-        }
+        static void Close(object sender, EventArgs e) => Application.Exit();
 
         static System.Threading.Timer ScanTimer = new System.Threading.Timer(new System.Threading.TimerCallback(Loop), null, System.Threading.Timeout.Infinite, 1000);
 
@@ -82,9 +79,8 @@ namespace PPT_RichPresence {
                 ret.Details = GameHelper.MenuToStringTop(menuId.Value);
                 ret.State = GameHelper.MenuToStringBottom(menuId.Value);
 
-                if (menuId == 28) {
+                if (menuId == 28)
                     ret.Details += $" ({GameHelper.LobbySize()} / {GameHelper.LobbyMax()})";
-                }
 
                 return ret;
             }
@@ -111,9 +107,8 @@ namespace PPT_RichPresence {
             ret.Assets.LargeImageText = GameHelper.ModeToString(modeId);
             ret.Assets.LargeImageKey = GameHelper.ModeToImage(modeId);
 
-            if (GameHelper.GetOnlineType() == 1) {
+            if (GameHelper.GetOnlineType() == 1)
                 ret.Details += $" ({GameHelper.LobbySize()} / {GameHelper.LobbyMax()})";
-            }
 
             if (GameHelper.IsCharacterSelect()) {
                 ret.State = "Character Select";
@@ -148,7 +143,8 @@ namespace PPT_RichPresence {
                     ? $"vs. {GameHelper.MatchPlayerName(1 - playerId)}"
                     : "Match";
 
-                if (majorId == 4) ret.State += $" ({GameHelper.GetScore()})";
+                if (majorId == 4)
+                    ret.State += $" ({GameHelper.GetScore()})";
 
                 ret.Assets.LargeImageText += type;
 
