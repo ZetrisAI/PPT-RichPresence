@@ -9,6 +9,20 @@ namespace PPT_RichPresence {
     static class Program {
         public static ProcessMemory PPT = new ProcessMemory("puyopuyotetris");
         static DiscordRpcClient Presence;
+        static bool PresenceRunning => Presence != null && !Presence.IsDisposed && Presence.IsInitialized;
+
+        static void SetPresence(bool state) {
+            if (PresenceRunning == state) return;
+
+            if (state) {
+                Presence = new DiscordRpcClient("539426896841277440");
+                Presence.Initialize();
+            } else {
+                Presence.ClearPresence();
+                Presence.Dispose();
+                Presence = null;
+            }
+        }
 
         static readonly string ShortcutPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Startup)}\\PPT-RichPresence.lnk";
 
@@ -161,9 +175,9 @@ namespace PPT_RichPresence {
         }
 
         static void Loop(object e) {
-            Presence.Invoke();
+            if (Process.GetProcessesByName("Discord").Length > 0 && PPT.CheckProcess()) {
+                SetPresence(true);
 
-            if (PPT.CheckProcess()) {
                 PPT.TrustProcess = true;
 
                 RichPresence GameState = GetState(out bool success);
@@ -171,7 +185,7 @@ namespace PPT_RichPresence {
 
                 PPT.TrustProcess = false;
 
-            } else Presence.ClearPresence();
+            } else SetPresence(false);
         }
 
         [STAThread]
@@ -184,9 +198,6 @@ namespace PPT_RichPresence {
                 return;
             }
 
-            Presence = new DiscordRpcClient("539426896841277440");
-            Presence.Initialize();
-
             tray.Visible = true;
             tray.ContextMenu.Popup += CheckFreePlayLobby;
 
@@ -198,8 +209,7 @@ namespace PPT_RichPresence {
             
             tray.Dispose();
 
-            Presence.ClearPresence();
-            Presence.Dispose();
+            SetPresence(false);
         }
     }
 }
