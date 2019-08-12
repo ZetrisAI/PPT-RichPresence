@@ -55,6 +55,12 @@
     <ApplicationIcon>Resources\TrayIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DiscordRPC, Version=1.0.121.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiscordRichPresence.1.0.121\lib\net35\DiscordRPC.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -102,10 +108,6 @@
     <ProjectReference Include="..\..\ProcessMemory\ProcessMemory\ProcessMemory.csproj">
       <Project>{35b5c872-d829-428f-9dfa-8ef2b4de194c}</Project>
       <Name>ProcessMemory</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DiscordRPC\DiscordRPC.csproj">
-      <Project>{819d20d6-8d88-45c1-a4d2-aa21f10abd19}</Project>
-      <Name>DiscordRPC</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
