@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPT-RichPresence", "PPT-RichPresence\PPT-RichPresence.csproj", "{00E7FC92-ED69-410F-B1D6-1476F9352641}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessMemory", "..\ProcessMemory\ProcessMemory\ProcessMemory.csproj", "{35B5C872-D829-428F-9DFA-8EF2B4DE194C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,14 +27,6 @@ Global
 		{00E7FC92-ED69-410F-B1D6-1476F9352641}.Release|x64.Build.0 = Release|x64
 		{00E7FC92-ED69-410F-B1D6-1476F9352641}.Release|x86.ActiveCfg = Release|Any CPU
 		{00E7FC92-ED69-410F-B1D6-1476F9352641}.Release|x86.Build.0 = Release|Any CPU
-		{35B5C872-D829-428F-9DFA-8EF2B4DE194C}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{35B5C872-D829-428F-9DFA-8EF2B4DE194C}.Debug|x64.ActiveCfg = Debug|x64
-		{35B5C872-D829-428F-9DFA-8EF2B4DE194C}.Debug|x64.Build.0 = Debug|x64
-		{35B5C872-D829-428F-9DFA-8EF2B4DE194C}.Debug|x86.ActiveCfg = Debug|x64
-		{35B5C872-D829-428F-9DFA-8EF2B4DE194C}.Release|Any CPU.ActiveCfg = Release|x64
-		{35B5C872-D829-428F-9DFA-8EF2B4DE194C}.Release|x64.ActiveCfg = Release|x64
-		{35B5C872-D829-428F-9DFA-8EF2B4DE194C}.Release|x64.Build.0 = Release|x64
-		{35B5C872-D829-428F-9DFA-8EF2B4DE194C}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
